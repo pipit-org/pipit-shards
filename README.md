@@ -1,6 +1,6 @@
 # Pipit Shards
 
-Manejador de Shards de Pipit. Una shard es una conexión a lectura/escritura a una instancia de la base de datos.
+Manejador de Shards de Pipit. Una shard es una conexión de lectura/escritura a una instancia de la base de datos.
 
 En un sistema distribuido clásico cada shard podría ser una base de datos distinta, pero en este caso se reutiliza la misma base de datos sqlite para simplificar el código.
 
