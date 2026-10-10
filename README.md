@@ -1,15 +1,19 @@
 # Pipit Shards
 
-Manejador de Shards de Pipit. Una shard es una conexión de lectura/escritura a una instancia de la base de datos.
+Gestor de fragmentos (*shards*) para el sistema de mensajería **Pipit**.
 
-En un sistema distribuido clásico cada shard podría ser una base de datos distinta, pero en este caso se reutiliza la misma base de datos sqlite para simplificar el código.
+## ¿Qué es?
 
-## Introducción
+Una *shard* representa una conexión de lectura y escritura a una instancia de base de datos. 
+* En un sistema distribuido tradicional, cada *shard* correspondería a una base de datos diferente; sin embargo, en este proyecto se reutiliza una única base de datos SQLite para simplificar la implementación.
 
-Una `Shard` cumple con la interfaz de un `http.Handler` por lo que pueden manejar peticiones HTTP provenientes de la red y así responder de manera independiente a los clientes.
+## Componentes principales
 
-Por otro lado, el `ShardManager` se encarga de crear y gestionar las conexiones abiertas. La implementación subyacente de Go con `database/sql` ya implementa un mecánismo de pooling para cada conexión de la base de datos, así se reutilizan de manera eficiente las conexiones abiertas.
+* **Shard:** Implementa la interfaz `http.Handler`, lo que le permite procesar peticiones HTTP de la red y responder de forma independiente a los clientes.
+* **ShardManager:** Se encarga de crear y administrar las conexiones abiertas. Utiliza el mecanismo nativo de *pooling* de `database/sql` en Go para optimizar la reutilización de conexiones de manera eficiente.
 
-## Relevante
+## Contexto
 
-El presente software se distribuye sin garantías de ningún tipo. La intención original de este programa es servir como proyecto de ejemplo para la asignatura "Desarrollo de Aplicaciones para Ambientes Distribuidos" en el IES6017, Salta, Argentina.
+Software desarrollado como proyecto de ejemplo para la asignatura **Desarrollo de Aplicaciones para Ambientes Distribuidos** del **IES6017** (Salta, Argentina).
+
+> Este software se distribuye sin garantías de ningún tipo.
