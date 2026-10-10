@@ -5,5 +5,5 @@ type Message struct {
 	ID       int    `json:"id"`
 	TopicID  string `json:"topic_id"`
 	SenderID string `json:"sender_id"`
-	Body     []byte `json:"body"`
+	Body     string `json:"body"`
 }

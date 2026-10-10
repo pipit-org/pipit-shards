@@ -148,13 +148,7 @@ func (sm *ShardManager) Save(ctx context.Context, m Message) error {
 		return err
 	}
 
-	// La columna body es NOT NULL: un cuerpo ausente (nil) se guarda como vacío.
-	body := m.Body
-	if body == nil {
-		body = []byte{}
-	}
-
-	_, err = w.ExecContext(ctx, insertSQL, m.TopicID, m.SenderID, body)
+	_, err = w.ExecContext(ctx, insertSQL, m.TopicID, m.SenderID, m.Body)
 	return err
 }
 
