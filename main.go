@@ -27,6 +27,8 @@ func main() {
 	if err := sm.Init(ctx); err != nil {
 		log.Fatalf("no se pudo inicializar el shard manager: %v", err)
 	}
+	defer sm.Close(ctx)
+
 	if err := sm.Migrate(ctx); err != nil {
 		log.Fatalf("no se pudo migrar el esquema: %v", err)
 	}

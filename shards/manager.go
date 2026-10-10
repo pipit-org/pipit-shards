@@ -19,17 +19,6 @@ const (
 	ReaderIdleTimeout  = time.Minute // 1 minuto
 )
 
-const initSQL = `
-	PRAGMA journal_mode = WAL;
-	PRAGMA synchronous = NORMAL;
-	PRAGMA temp_store = MEMORY;
-	PRAGMA busy_timeout = 5000;
-	PRAGMA automatic_index = true;
-	PRAGMA foreign_keys = ON;
-	PRAGMA analysis_limit = 1000;
-	PRAGMA trusted_schema = OFF;
-`
-
 // ShardManager se encarga de controlar las peticiones a la base de datos.
 type ShardManager struct {
 	// dsn es el data-source-name o el string que permite conectarse a la base de datos.
@@ -106,12 +95,10 @@ func (sm *ShardManager) Close(ctx context.Context) error {
 	// estadísticas que usa el planificador de consultas, acotadas por ese límite.
 	_, optErr := w.ExecContext(ctx, "PRAGMA optimize")
 
-	// Tras esto, las llamadas devuelven ErrNotInit en vez de "database is closed".
 	sm.mu.Lock()
 	sm.dbWriter, sm.dbReader = nil, nil
 	sm.mu.Unlock()
 
-	// Al cerrarse la última conexión, SQLite hace checkpoint del WAL a la base principal.
 	return errors.Join(optErr, r.Close(), w.Close())
 }
 

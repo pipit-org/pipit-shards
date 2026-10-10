@@ -1,5 +1,16 @@
 package shards
 
+const initSQL = `
+	PRAGMA journal_mode = WAL;
+	PRAGMA synchronous = NORMAL;
+	PRAGMA temp_store = MEMORY;
+	PRAGMA busy_timeout = 5000;
+	PRAGMA automatic_index = true;
+	PRAGMA foreign_keys = ON;
+	PRAGMA analysis_limit = 1000;
+	PRAGMA trusted_schema = OFF;
+`
+
 const schemaSQL = `
 	CREATE TABLE IF NOT EXISTS messages (
 		id         INTEGER PRIMARY KEY AUTOINCREMENT,
