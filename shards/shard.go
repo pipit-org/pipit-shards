@@ -75,22 +75,17 @@ func (sd *Shard) handlePing(w http.ResponseWriter, r *http.Request) {
 func (sd *Shard) handleSave(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, maxBodyBytes)
 
-	var in Message
-	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+	var msg Message
+	if err := json.NewDecoder(r.Body).Decode(&msg); err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
 		return
 	}
-	if in.TopicID == "" || in.SenderID == "" {
+	if msg.TopicID == "" || msg.SenderID == "" {
 		http.Error(w, "faltan campos obligatorios: topic_id, sender_id", http.StatusBadRequest)
 		return
 	}
 
-	err := sd.tn.Save(r.Context(), Message{
-		ID:       in.ID,
-		TopicID:  in.TopicID,
-		SenderID: in.SenderID,
-		Body:     in.Body,
-	})
+	err := sd.tn.Save(r.Context(), msg)
 	if err != nil {
 		log.Printf("shard: save falló: %v", err)
 		http.Error(w, "error interno", http.StatusInternalServerError)
@@ -124,19 +119,8 @@ func (sd *Shard) handleMessages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Siempre un arreglo JSON, nunca null.
-	out := make([]Message, 0, len(msgs))
-	for _, m := range msgs {
-		out = append(out, Message{
-			ID:       m.ID,
-			TopicID:  m.TopicID,
-			SenderID: m.SenderID,
-			Body:     m.Body,
-		})
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(out)
+	json.NewEncoder(w).Encode(msgs)
 }
 
 func methodNotAllowed(w http.ResponseWriter, allow string) {
